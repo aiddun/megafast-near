@@ -15,9 +15,8 @@ const config = {
   explorerUrl: "https://explorer.testnet.near.org",
 };
 
-// connect to NEAR
-const near = await connect(config);
-const wallet = new WalletConnection(near);
+let near;
+let wallet;
 
 const SubmitButton = ({
   onClick,
@@ -156,6 +155,11 @@ const Connect = () => {
         <SubmitButton
           title={loading ? "Processing..." : "Connect Wallet"}
           onClick={async () => {
+            if (!wallet) {
+              // connect to NEAR
+              near = await connect(config);
+              wallet = new WalletConnection(near);
+            }
             const session = await wallet.requestSignIn(
               "", // contract requesting access
               "UT NEAR Faucet"
